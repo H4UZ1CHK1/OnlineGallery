@@ -1,0 +1,152 @@
+﻿@model IEnumerable<OnlineGallery.Models.ImageWithLikesViewModel>
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Галерея";
+    var categories = ViewData["Categories"] as SelectList;
+    var search = ViewData["CurrentSearch"] as string ?? "";
+    var selectedCategoryId = Context.Request.Query["categoryId"].ToString();
+    var sortLikes = Context.Request.Query["sortLikes"].ToString();
+    var userRole = User.FindFirstValue(ClaimTypes.Role);
+    var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    int.TryParse(userIdStr, out var userId);
+    var allTransactions = ViewBag.AllTransactions as List<OnlineGallery.Models.Transactions>;
+}
+
+<h1>Галерея</h1>
+
+<form method="get" asp-action="Index" class="border p-3 rounded bg-light mb-4">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label">Поиск по названию</label>
+            <input type="text" name="search" value="@search" class="form-control" placeholder="Введите название..." />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Категория</label>
+            <select name="categoryId" class="form-select">
+                <option value="">Все категории</option>
+                @if (categories != null)
+                {
+                    foreach (var category in categories)
+                    {
+                        bool isSelected = selectedCategoryId == category.Value;
+                        <option value="@category.Value" selected="@(isSelected ? "selected" : null)">@category.Text</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Сортировка по лайкам</label>
+            <select name="sortLikes" class="form-select">
+                <option value="" selected="@(sortLikes == "" ? "selected" : null)">Без сортировки</option>
+                <option value="asc" selected="@(sortLikes == "asc" ? "selected" : null)">По возрастанию</option>
+                <option value="desc" selected="@(sortLikes == "desc" ? "selected" : null)">По убыванию</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100">🔍 Найти</button>
+            <a href="@Url.Action("Index", "Images")" class="btn btn-outline-secondary w-100">❌ Сброс</a>
+        </div>
+    </div>
+</form>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Добавить изображение</a>
+</p>
+
+<style>
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .card {
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card h3 {
+        margin-top: 10px;
+        font-size: 18px;
+    }
+
+    .card p {
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="gallery">
+    @foreach (var item in Model)
+    {
+        var isPurchased = allTransactions?.Any(t => t.ImageId == item.Image?.ImageId) ?? false;
+
+        <div class="card">
+            <img src="@item.Image?.FilePath" class="card-img-top" alt="@item.Image?.Title" />
+            <h5 class="card-title">@item.Image?.Title</h5>
+            <p><strong>Категория:</strong> @item.Image?.Category?.CategoryName</p>
+            <p><strong>Автор:</strong> @item.Image?.User?.FirstName @item.Image?.User?.LastName</p>
+            <p><strong>Описание:</strong> @item.Image?.Description</p>
+            <p><strong>Дата:</strong> @item.Image?.DateUploaded?.ToShortDateString()</p>
+            <p><strong>Цена:</strong> @item.Image?.Price ₽</p>
+
+            @if (item.Image?.Status == "Rejected" && item.Image.UserId == userId)
+            {
+                <div class="alert alert-danger mt-2">
+                    <strong>Отклонено:</strong> @item.Image.ModerationComment
+                </div>
+            }
+
+            <div class="mb-2">
+                <span class="text-danger fw-bold me-2">❤️ Лайков: @item.LikesCount</span>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <form asp-controller="Likes" asp-action="Add" method="post" class="d-inline">
+                    <input type="hidden" name="imageId" value="@item.Image?.ImageId" />
+                    <button type="submit" class="btn btn-outline-danger btn-sm">❤️ Лайк</button>
+                </form>
+
+                <a asp-controller="Favorites" asp-action="Add" asp-route-imageId="@item.Image?.ImageId" class="btn btn-outline-warning btn-sm">⭐ В избранное</a>
+
+                @if (userRole == "Админ")
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Image?.ImageId" class="btn btn-outline-secondary btn-sm">✏️ Редактировать</a>
+                    <a asp-action="Delete" asp-route-id="@item.Image?.ImageId" class="btn btn-outline-dark btn-sm">🗑 Удалить</a>
+                }
+                else if (item.Image?.Status == "Rejected" && item.Image?.UserId == userId)
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Image?.ImageId" class="btn btn-outline-dark btn-sm">🗑 Удалить</a>
+                }
+
+                <a asp-action="Details" asp-route-id="@item.Image?.ImageId" class="btn btn-outline-primary btn-sm">🔍 Подробнее</a>
+
+                @if (!isPurchased)
+                {
+                    <form asp-action="Buy" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@item.Image?.ImageId" />
+                        <button type="submit" class="btn btn-success btn-sm">💳 Купить</button>
+                    </form>
+                }
+                else
+                {
+                    <span class="text-muted">Куплено</span>
+                }
+            </div>
+        </div>
+    }
+</div>

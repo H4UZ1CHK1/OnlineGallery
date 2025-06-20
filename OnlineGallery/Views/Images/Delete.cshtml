@@ -1,0 +1,54 @@
+﻿@model OnlineGallery.Models.Image
+
+@{
+    ViewData["Title"] = "Удаление изображения";
+}
+
+<h1>Удаление</h1>
+
+<h3>Вы уверены, что хотите удалить это изображение?</h3>
+<div>
+    <h4>Информация об изображении</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Название</dt>
+        <dd class="col-sm-9">@Model.Title</dd>
+
+        <dt class="col-sm-3">Описание</dt>
+        <dd class="col-sm-9">@Model.Description</dd>
+
+        <dt class="col-sm-3">Путь к файлу</dt>
+        <dd class="col-sm-9">@Model.FilePath</dd>
+
+        <dt class="col-sm-3">Дата загрузки</dt>
+        <dd class="col-sm-9">@Model.DateUploaded</dd>
+
+        <dt class="col-sm-3">Создано пользователем (ID)</dt>
+        <dd class="col-sm-9">@Model.CreatedBy</dd>
+
+        <dt class="col-sm-3">Дата создания</dt>
+        <dd class="col-sm-9">@Model.CreatedDate</dd>
+
+        <dt class="col-sm-3">Обновлено пользователем (ID)</dt>
+        <dd class="col-sm-9">@Model.UpdatedBy</dd>
+
+        <dt class="col-sm-3">Дата обновления</dt>
+        <dd class="col-sm-9">@Model.UpdatedDate</dd>
+
+        <dt class="col-sm-3">Категория</dt>
+        <dd class="col-sm-9">
+            @(Model.Category != null ? Model.Category.CategoryName : "—")
+        </dd>
+
+        <dt class="col-sm-3">Пользователь</dt>
+        <dd class="col-sm-9">
+            @(Model.User != null ? Model.User.FirstName + " " + Model.User.LastName : "—")
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ImageId" />
+        <button type="submit" class="btn btn-danger">🗑 Удалить</button>
+        <a asp-action="Index" class="btn btn-outline-secondary ms-2">← Назад к списку</a>
+    </form>
+</div>

@@ -1,0 +1,46 @@
+﻿@model OnlineGallery.Models.Comment
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Comment</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CommentText)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CommentText)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+        <dt class="col-sm-2">
+            Изображение
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Image != null ? Model.Image.ImageId.ToString() : "—")
+        </dd>
+
+        <dt class="col-sm-2">
+            Пользователь
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.User != null ? Model.User.UserId.ToString() : "—")
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.CommentId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<OnlineGallery.Models.Favorite>
+
+@{
+    ViewData["Title"] = "Избранное";
+}
+
+<h1>Избранные изображения</h1>
+
+<style>
+    .favorites-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .card {
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        padding: 10px;
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card h3 {
+        margin-top: 10px;
+        font-size: 18px;
+    }
+
+    .card p {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="favorites-gallery">
+    @foreach (var fav in Model)
+    {
+        <div class="card">
+            <img src="@fav.Image?.FilePath" alt="@fav.Image?.Title" />
+            <h3>@fav.Image?.Title</h3>
+            <p><strong>Автор:</strong> @fav.User?.FirstName @fav.User?.LastName</p>
+            <p><strong>Описание:</strong> @fav.Image?.Description</p>
+            <p><strong>Дата:</strong> @(fav.DateAdded?.ToShortDateString())</p>
+            <form method="post" asp-action="Delete" asp-route-id="@fav.FavoriteId">
+                <button type="submit" class="btn btn-danger btn-sm mt-2">🗑 Удалить из избранного</button>
+            </form>
+        </div>
+    }
+</div>

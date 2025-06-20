@@ -1,0 +1,48 @@
+﻿@model OnlineGallery.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<h2 class="mb-4">📝 Регистрация</h2>
+<hr />
+
+<form asp-action="Register" method="post" class="w-50">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="form-group mb-2">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" type="email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-2">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" type="password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <input asp-for="ConfirmPassword" class="form-control" type="password" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">📥 Зарегистрироваться</button>
+</form>
+
+@section Scripts {
+    await Html.RenderPartialAsync("_ValidationScriptsPartial")
+}
+

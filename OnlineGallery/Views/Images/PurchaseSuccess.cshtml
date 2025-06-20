@@ -1,0 +1,18 @@
+﻿@model OnlineGallery.Models.Image
+
+@{
+    ViewData["Title"] = "Покупка завершена";
+}
+
+<h2>Спасибо за покупку!</h2>
+
+<div class="card mt-4" style="width: 300px;">
+    <img src="@Model.FilePath" class="card-img-top" alt="@Model.Title">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Title</h5>
+        <p class="card-text">@Model.Description</p>
+        <p class="card-text"><strong>Дата загрузки:</strong> @Model.DateUploaded?.ToString("dd.MM.yyyy")</p>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-primary mt-3">Вернуться в галерею</a>

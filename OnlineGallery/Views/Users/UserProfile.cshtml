@@ -1,0 +1,133 @@
+﻿@model OnlineGallery.Models.User
+
+@{
+    ViewData["Title"] = "Профиль пользователя";
+}
+
+<h2>Профиль: @Model.FirstName @Model.LastName</h2>
+<p><strong>Email:</strong> @Model.Email</p>
+
+<style>
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .card {
+        width: 220px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+    }
+
+        .card img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+    .card-title {
+        font-size: 16px;
+        margin-top: 5px;
+    }
+
+    .card-text {
+        font-size: 13px;
+    }
+</style>
+
+<hr />
+<h3>Загруженные изображения</h3>
+@if (Model.Images?.Any(i => !string.IsNullOrWhiteSpace(i.FilePath)) == true)
+{
+    <div class="gallery">
+        @foreach (var img in Model.Images.Where(i => !string.IsNullOrWhiteSpace(i.FilePath)))
+        {
+            <div class="card">
+                <img src="@img.FilePath" alt="@img.Title" />
+                <div class="card-body">
+                    <h5 class="card-title">@img.Title</h5>
+                    <p class="card-text"><strong>Описание:</strong> @img.Description</p>
+                    <p class="card-text"><strong>Дата:</strong> @img.DateUploaded?.ToString("dd.MM.yyyy")</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Нет загруженных изображений.</p>
+}
+
+<hr />
+<h3>Избранное</h3>
+@if (Model.Favorites?.Any(f => f.Image != null && !string.IsNullOrWhiteSpace(f.Image.FilePath)) == true)
+{
+    <div class="gallery">
+        @foreach (var fav in Model.Favorites.Where(f => f.Image != null && !string.IsNullOrWhiteSpace(f.Image.FilePath)))
+        {
+            var img = fav.Image;
+            <div class="card">
+                <img src="@img?.FilePath" alt="@img?.Title" />
+                <div class="card-body">
+                    <h5 class="card-title">@img?.Title</h5>
+                    <p class="card-text"><strong>Описание:</strong> @img?.Description</p>
+                    <p class="card-text"><strong>Дата:</strong> @img?.DateUploaded?.ToString("dd.MM.yyyy")</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Нет избранных изображений.</p>
+}
+
+<hr />
+<h3>Понравившиеся</h3>
+@if (Model.Likes?.Any(l => l.Image != null && !string.IsNullOrWhiteSpace(l.Image.FilePath)) == true)
+{
+    <div class="gallery">
+        @foreach (var like in Model.Likes.Where(l => l.Image != null && !string.IsNullOrWhiteSpace(l.Image.FilePath)))
+        {
+            var img = like.Image;
+            <div class="card">
+                <img src="@img?.FilePath" alt="@img?.Title" />
+                <div class="card-body">
+                    <h5 class="card-title">@img?.Title</h5>
+                    <p class="card-text"><strong>Описание:</strong> @img?.Description</p>
+                    <p class="card-text"><strong>Дата:</strong> @img?.DateUploaded?.ToString("dd.MM.yyyy")</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Нет понравившихся изображений.</p>
+}
+<h4 class="mt-4">💳 Реквизиты карты</h4>
+
+<form asp-action="SaveCardDetails" method="post">
+    <div class="mb-3">
+        <label>Имя владельца</label>
+        <input name="CardHolderName" value="@Model.CardHolderName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Номер карты</label>
+        <input name="CardNumber" value="@Model.CardNumber" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Срок действия</label>
+        <input name="ExpirationDate" value="@Model.ExpirationDate" class="form-control" placeholder="MM/YY" />
+    </div>
+    <div class="mb-3">
+        <label>CVV</label>
+        <input name="CVV" value="@Model.CVV" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">💾 Сохранить реквизиты</button>
+</form>
+
