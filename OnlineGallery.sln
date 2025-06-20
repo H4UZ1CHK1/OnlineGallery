@@ -5,8 +5,6 @@ VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineGallery", "OnlineGallery\OnlineGallery.csproj", "{3170FF0B-9116-4E1E-853F-55B4DE41872F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineGallery.Tests", "OnlineGallery.Tests\OnlineGallery.Tests.csproj", "{F30B32FB-B695-4EB3-8B00-5BF625717892}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{3170FF0B-9116-4E1E-853F-55B4DE41872F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3170FF0B-9116-4E1E-853F-55B4DE41872F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3170FF0B-9116-4E1E-853F-55B4DE41872F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F30B32FB-B695-4EB3-8B00-5BF625717892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F30B32FB-B695-4EB3-8B00-5BF625717892}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F30B32FB-B695-4EB3-8B00-5BF625717892}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F30B32FB-B695-4EB3-8B00-5BF625717892}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
